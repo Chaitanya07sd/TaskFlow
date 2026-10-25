@@ -98,6 +98,10 @@
                                     <directory>${project.basedir}/../frontend</directory>
                                     <filtering>false</filtering>
                                 </resource>
+                                <resource>
+                                    <directory>${project.basedir}/frontend</directory>
+                                    <filtering>false</filtering>
+                                </resource>
                             </resources>
                         </configuration>
                     </execution>

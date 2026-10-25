@@ -7,16 +7,16 @@ FROM maven:3.9.6-eclipse-temurin-17-alpine AS builder
 
 WORKDIR /app
 
-# Copy Maven descriptor and parent folder structure
-COPY pom.xml ./pom.xml
+# Copy Maven descriptor
+COPY backend/pom.xml ./pom.xml
 # Copy frontend for packaging into static resources
-COPY ../frontend ./frontend
+COPY frontend ./frontend
 
 # Cache dependencies
 RUN mvn dependency:go-offline -B || true
 
 # Copy backend source code
-COPY src ./src
+COPY backend/src ./src
 
 # Build production JAR without tests (tests are verified in CI stage)
 RUN mvn clean package -DskipTests -B
