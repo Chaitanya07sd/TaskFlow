@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create a TaskFlow account to manage your projects and personal tasks.">
+  <title>Create Account — TaskFlow</title>
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <!-- Preconnect and Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <!-- Brand Header -->
+    <a href="/login.html" class="auth-brand" aria-label="TaskFlow Home">
+      <div class="auth-brand-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 11 12 14 22 4"></polyline>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+        </svg>
+      </div>
+      <span class="auth-brand-name">Task<span>Flow</span></span>
+    </a>
+
+    <!-- Auth Card -->
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1 class="auth-title">Create an account</h1>
+        <p class="auth-subtitle">Get organized and start tracking your tasks today</p>
+      </div>
+
+      <!-- Feedback Banner -->
+      <div id="auth-alert" class="auth-alert" role="alert"></div>
+
+      <!-- Registration Form -->
+      <form id="register-form" novalidate>
+        <div class="form-group">
+          <label for="name" class="form-label">Full Name</label>
+          <div class="input-container">
+            <input 
+              type="text" 
+              id="name" 
+              name="name" 
+              class="form-input" 
+              placeholder="e.g. Alex Johnson" 
+              autocomplete="name" 
+              required
+            >
+          </div>
+          <span id="name-error" class="form-error-msg"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="email" class="form-label">Email Address</label>
+          <div class="input-container">
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              class="form-input" 
+              placeholder="alex@example.com" 
+              autocomplete="email" 
+              required
+            >
+          </div>
+          <span id="email-error" class="form-error-msg"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-container">
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              class="form-input has-toggle" 
+              placeholder="Minimum 6 characters" 
+              autocomplete="new-password" 
+              required
+            >
+            <button type="button" class="input-toggle-btn" data-target="password" aria-label="Show password">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+          <span id="password-error" class="form-error-msg"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword" class="form-label">Confirm Password</label>
+          <div class="input-container">
+            <input 
+              type="password" 
+              id="confirmPassword" 
+              name="confirmPassword" 
+              class="form-input has-toggle" 
+              placeholder="Re-enter your password" 
+              autocomplete="new-password" 
+              required
+            >
+            <button type="button" class="input-toggle-btn" data-target="confirmPassword" aria-label="Show password">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+          <span id="confirmPassword-error" class="form-error-msg"></span>
+        </div>
+
+        <button type="submit" id="submit-btn" class="btn-submit">
+          <span class="spinner" aria-hidden="true"></span>
+          <span class="btn-text">Create Account</span>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="/login.html">Sign in</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+</body>
+</html>

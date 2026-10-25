@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TaskFlow — Modern Full-Stack Task Management System">
+  <title>Dashboard — TaskFlow</title>
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Desktop & Mobile Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Main Navigation">
+      <div class="sidebar-header">
+        <a href="/index.html" class="sidebar-brand">
+          <div class="brand-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 11 12 14 22 4"></polyline>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+          </div>
+          <span class="brand-title">Task<span>Flow</span></span>
+        </a>
+        <button type="button" class="sidebar-close-btn" id="sidebar-close" aria-label="Close sidebar menu">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Views</div>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#" class="nav-link active" id="nav-all">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+              <span>All Tasks</span>
+              <span class="nav-badge" id="badge-all">0</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" id="nav-pending">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span>Pending</span>
+              <span class="nav-badge" id="badge-pending">0</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" id="nav-completed">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <span>Completed</span>
+              <span class="nav-badge" id="badge-completed">0</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-pill">
+          <div class="user-avatar" id="user-avatar">--</div>
+          <div class="user-info">
+            <div class="user-name" id="user-name">Loading...</div>
+            <div class="user-email" id="user-email">...</div>
+          </div>
+          <button type="button" class="logout-btn" id="logout-btn" title="Sign out" aria-label="Sign out">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Mobile Backdrop -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <!-- Top Navigation Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Open menu">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <h2 class="page-title">Task Dashboard</h2>
+        </div>
+
+        <div class="header-right">
+          <button type="button" class="btn-primary" id="open-add-modal-btn">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>New Task</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <main class="page-content">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+          <h1 class="welcome-title">Welcome back, <span id="welcome-name">there</span>!</h1>
+          <p class="welcome-subtitle">Here is a summary of your workspace and active assignments.</p>
+        </div>
+
+        <!-- 4 Stat Summary Cards -->
+        <section class="stats-grid" aria-label="Summary Statistics">
+          <div class="stat-card">
+            <div class="stat-icon total">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Total Tasks</div>
+              <div class="stat-value" id="stat-total">0</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon pending">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Pending</div>
+              <div class="stat-value" id="stat-pending">0</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon completed">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Completed</div>
+              <div class="stat-value" id="stat-completed">0</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon rate">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Completion Rate</div>
+              <div class="stat-value" id="stat-rate">0%</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Search, Filter & Sort Toolbar -->
+        <div class="toolbar">
+          <div class="toolbar-search">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input 
+              type="text" 
+              class="search-input" 
+              id="search-input" 
+              placeholder="Search tasks by title or details..."
+              aria-label="Search tasks"
+            >
+            <button type="button" class="search-clear-btn" id="search-clear" aria-label="Clear search">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div class="toolbar-filters">
+            <button type="button" class="filter-btn active" data-filter="ALL">All</button>
+            <button type="button" class="filter-btn" data-filter="PENDING">Pending</button>
+            <button type="button" class="filter-btn" data-filter="COMPLETED">Completed</button>
+          </div>
+
+          <div class="toolbar-sort">
+            <select class="sort-select" id="sort-select" aria-label="Sort tasks">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="title">Title (A - Z)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Task List Area -->
+        <section aria-label="Task List">
+          <!-- Loading Skeleton -->
+          <div class="loading-skeleton" id="loading-skeleton">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+          </div>
+
+          <!-- Empty State -->
+          <div class="empty-state" id="empty-state">
+            <div class="empty-icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="12" y1="18" x2="12" y2="12"></line>
+                <line x1="9" y1="15" x2="15" y2="15"></line>
+              </svg>
+            </div>
+            <h3 class="empty-title">No tasks found</h3>
+            <p class="empty-subtitle">You have no tasks matching the selected filters. Add a new task to stay organized and productive.</p>
+            <button type="button" class="btn-primary" id="empty-add-btn">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>Create your first task</span>
+            </button>
+          </div>
+
+          <!-- Tasks Cards Container -->
+          <div class="tasks-container" id="tasks-container"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add / Edit Task Modal -->
+  <div class="modal-overlay" id="task-modal" role="dialog" aria-modal="true" aria-labelledby="task-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="task-modal-title">Create New Task</h2>
+        <button type="button" class="modal-close-btn" id="task-modal-close" aria-label="Close dialog">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <form id="task-form" novalidate>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="modal-task-title" class="form-label">Task Title *</label>
+            <input 
+              type="text" 
+              id="modal-task-title" 
+              class="form-input" 
+              placeholder="e.g. Set up Jenkins CI/CD pipeline" 
+              maxlength="200" 
+              required
+            >
+            <span id="modal-title-error" class="form-error-msg"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="modal-task-desc" class="form-label">Description (Optional)</label>
+            <textarea 
+              id="modal-task-desc" 
+              class="form-input" 
+              rows="4" 
+              placeholder="Add key deliverables, deadlines, or relevant links..."
+            ></textarea>
+          </div>
+
+          <div class="form-group" id="modal-status-group" style="display: none;">
+            <label for="modal-task-status" class="form-label">Status</label>
+            <select id="modal-task-status" class="form-input">
+              <option value="PENDING">Pending</option>
+              <option value="COMPLETED">Completed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="task-modal-cancel">Cancel</button>
+          <button type="submit" class="btn-primary" id="task-modal-submit">
+            <span class="spinner" aria-hidden="true"></span>
+            <span class="btn-text">Save Task</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Task Confirmation Modal -->
+  <div class="modal-overlay" id="delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-body" style="text-align: center; padding-top: var(--space-8);">
+        <div class="delete-icon-box" style="margin: 0 auto var(--space-4);">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <h2 class="modal-title" id="delete-modal-title" style="margin-bottom: var(--space-2);">Delete Task</h2>
+        <p style="font-size: var(--font-sm); color: var(--text-muted); line-height: 1.5;">
+          Are you sure you want to permanently remove this task? This action cannot be undone.
+        </p>
+      </div>
+
+      <div class="modal-footer" style="justify-content: center; gap: var(--space-3); padding-bottom: var(--space-6);">
+        <button type="button" class="btn-secondary" id="delete-modal-cancel">Keep Task</button>
+        <button type="button" class="btn-danger" id="confirm-delete-btn">Delete Task</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Application Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

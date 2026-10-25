@@ -1,0 +1,76 @@
+# ==============================================================================
+# TaskFlow Docker Compose Configuration
+# ==============================================================================
+
+services:
+  # ----------------------------------------------------------------------------
+  # TaskFlow Backend & Web Service
+  # Connects to your existing Windows MySQL (port 3306) via host.docker.internal,
+  # or to the optional containerized-db service below.
+  # ----------------------------------------------------------------------------
+  taskflow-app:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    image: taskflow-app:latest
+    container_name: taskflow-app
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=${DB_HOST:-host.docker.internal}
+      - DB_PORT=${DB_PORT:-3306}
+      - DB_NAME=${DB_NAME:-task_manager_db}
+      - DB_USERNAME=${DB_USERNAME:-root}
+      - DB_PASSWORD=${DB_PASSWORD:-}
+      - COOKIE_SECURE=${COOKIE_SECURE:-false}
+      - JAVA_OPTS=-Xms256m -Xmx512m
+    extra_hosts:
+      # Allows Linux/Windows Docker containers to resolve host machine IP
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 25s
+    restart: unless-stopped
+    networks:
+      - taskflow-network
+
+  # ----------------------------------------------------------------------------
+  # Optional Containerized MySQL 8.0
+  # Note: Activated only with `--profile containerized-db` so it never conflicts
+  # with your existing Windows MySQL 8.0 installation on port 3306.
+  # ----------------------------------------------------------------------------
+  mysql-db:
+    image: mysql:8.0
+    container_name: taskflow-mysql
+    profiles:
+      - containerized-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: task_manager_db
+      MYSQL_USER: ${DB_USERNAME:-taskuser}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-taskflowpass}
+    ports:
+      # Mapped to 3307 on host to prevent colliding with existing Windows port 3306
+      - "3307:3306"
+    volumes:
+      - taskflow-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+    networks:
+      - taskflow-network
+
+networks:
+  taskflow-network:
+    driver: bridge
+
+volumes:
+  taskflow-mysql-data:
+    name: taskflow-mysql-data
