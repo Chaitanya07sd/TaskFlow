@@ -31,7 +31,16 @@ public class TaskService {
         User user = userService.getUserEntityById(userId);
 
         TaskStatus status = request.getStatus() != null ? request.getStatus() : TaskStatus.PENDING;
-        Task task = new Task(request.getTitle().trim(), request.getDescription(), status, user);
+        boolean recurring = request.getRecurringWeekly();
+        Task task = new Task(
+                request.getTitle().trim(),
+                request.getDescription(),
+                status,
+                request.getDueDate(),
+                recurring,
+                request.getRecurrenceDay(),
+                user
+        );
         Task savedTask = taskRepository.save(task);
 
         return TaskResponse.fromEntity(savedTask);
@@ -74,6 +83,9 @@ public class TaskService {
         if (request.getStatus() != null) {
             task.setStatus(request.getStatus());
         }
+        task.setDueDate(request.getDueDate());
+        task.setRecurringWeekly(request.getRecurringWeekly());
+        task.setRecurrenceDay(request.getRecurrenceDay());
 
         Task updatedTask = taskRepository.save(task);
         return TaskResponse.fromEntity(updatedTask);

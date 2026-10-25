@@ -6,7 +6,6 @@ import com.taskflow.security.RestAccessDeniedHandler;
 import com.taskflow.security.RestAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -101,8 +100,8 @@ public class WebSecurityConfig {
                     "/api/auth/me",
                     "/api/auth/logout"
                 ).authenticated()
-                // Task APIs are strictly protected
-                .requestMatchers("/api/tasks/**").authenticated()
+                // Task and Timetable APIs are strictly protected
+                .requestMatchers("/api/tasks/**", "/api/timetable/**").authenticated()
                 // Everything else denied or requires authentication
                 .anyRequest().authenticated()
             )

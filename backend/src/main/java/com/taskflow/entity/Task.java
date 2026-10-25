@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,6 +32,16 @@ public class Task {
     @Column(nullable = false, length = 20)
     private TaskStatus status = TaskStatus.PENDING;
 
+    @Column(name = "due_date")
+    private LocalDate dueDate;
+
+    @Column(name = "recurring_weekly", nullable = false)
+    private boolean recurringWeekly = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "recurrence_day", length = 20)
+    private TimetableDay recurrenceDay;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -49,6 +60,16 @@ public class Task {
         this.title = title;
         this.description = description;
         this.status = status != null ? status : TaskStatus.PENDING;
+        this.user = user;
+    }
+
+    public Task(String title, String description, TaskStatus status, LocalDate dueDate, boolean recurringWeekly, TimetableDay recurrenceDay, User user) {
+        this.title = title;
+        this.description = description;
+        this.status = status != null ? status : TaskStatus.PENDING;
+        this.dueDate = dueDate;
+        this.recurringWeekly = recurringWeekly;
+        this.recurrenceDay = recurrenceDay;
         this.user = user;
     }
 
@@ -120,5 +141,29 @@ public class Task {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public boolean isRecurringWeekly() {
+        return recurringWeekly;
+    }
+
+    public void setRecurringWeekly(boolean recurringWeekly) {
+        this.recurringWeekly = recurringWeekly;
+    }
+
+    public TimetableDay getRecurrenceDay() {
+        return recurrenceDay;
+    }
+
+    public void setRecurrenceDay(TimetableDay recurrenceDay) {
+        this.recurrenceDay = recurrenceDay;
     }
 }

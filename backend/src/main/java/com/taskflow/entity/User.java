@@ -42,6 +42,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Task> tasks = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<TimetableEntry> timetableEntries = new ArrayList<>();
+
     public User() {
     }
 
@@ -122,5 +125,13 @@ public class User {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public List<TimetableEntry> getTimetableEntries() {
+        return timetableEntries;
+    }
+
+    public void setTimetableEntries(List<TimetableEntry> timetableEntries) {
+        this.timetableEntries = timetableEntries;
     }
 }

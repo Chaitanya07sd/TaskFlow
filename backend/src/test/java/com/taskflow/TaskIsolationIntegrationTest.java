@@ -231,4 +231,51 @@ public class TaskIsolationIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(2)));
     }
+
+    @Test
+    @DisplayName("Should create task without deadline, and task with optional deadline and weekly recurrence")
+    void testOptionalDeadlineAndRecurringTasks() throws Exception {
+        MockHttpSession session = registerAndLogin("Planner User", "planner@example.com", "Password123");
+
+        // 1. Task without deadline
+        TaskRequest noDeadlineReq = new TaskRequest(
+                "Read documentation",
+                "Optional learning task",
+                TaskStatus.PENDING,
+                null,
+                false,
+                null
+        );
+
+        mockMvc.perform(post("/api/tasks")
+                        .session(session)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(noDeadlineReq)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data.title", is("Read documentation")))
+                .andExpect(jsonPath("$.data.dueDate").doesNotExist())
+                .andExpect(jsonPath("$.data.recurringWeekly", is(false)));
+
+        // 2. Task with deadline and weekly recurrence
+        TaskRequest recurringReq = new TaskRequest(
+                "Submit Weekly Report",
+                "Summarize weekly sprint deliverables",
+                TaskStatus.PENDING,
+                java.time.LocalDate.of(2026, 11, 20),
+                true,
+                com.taskflow.entity.TimetableDay.FRIDAY
+        );
+
+        mockMvc.perform(post("/api/tasks")
+                        .session(session)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(recurringReq)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data.title", is("Submit Weekly Report")))
+                .andExpect(jsonPath("$.data.dueDate", is("2026-11-20")))
+                .andExpect(jsonPath("$.data.recurringWeekly", is(true)))
+                .andExpect(jsonPath("$.data.recurrenceDay", is("FRIDAY")));
+    }
 }

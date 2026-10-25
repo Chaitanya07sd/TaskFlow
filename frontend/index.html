@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="TaskFlow — Modern Full-Stack Task Management System">
-  <title>Dashboard — TaskFlow</title>
+  <meta name="description" content="TaskFlow — Modern Full-Stack Task Manager and Personal Weekly Timetable">
+  <title>TaskFlow</title>
   <link rel="stylesheet" href="/css/variables.css">
   <link rel="stylesheet" href="/css/dashboard.css">
   <!-- Fonts -->
@@ -35,41 +35,68 @@
       </div>
 
       <nav class="sidebar-nav">
-        <div class="nav-section-title">Views</div>
+        <!-- Main Sections -->
+        <div class="nav-section-title">Navigation</div>
         <ul class="nav-list">
           <li class="nav-item">
-            <a href="#" class="nav-link active" id="nav-all">
+            <a href="#" class="nav-link active" id="nav-view-tasks">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <rect x="3" y="3" width="7" height="7"></rect>
                 <rect x="14" y="3" width="7" height="7"></rect>
                 <rect x="14" y="14" width="7" height="7"></rect>
                 <rect x="3" y="14" width="7" height="7"></rect>
               </svg>
-              <span>All Tasks</span>
-              <span class="nav-badge" id="badge-all">0</span>
+              <span>Tasks</span>
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link" id="nav-pending">
+            <a href="#" class="nav-link" id="nav-view-timetable">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
               </svg>
-              <span>Pending</span>
-              <span class="nav-badge" id="badge-pending">0</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link" id="nav-completed">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
-              <span>Completed</span>
-              <span class="nav-badge" id="badge-completed">0</span>
+              <span>Timetable</span>
             </a>
           </li>
         </ul>
+
+        <!-- Task Filters (shown when in Tasks view) -->
+        <div id="sidebar-task-filters" style="margin-top: var(--space-4);">
+          <div class="nav-section-title">Task Filters</div>
+          <ul class="nav-list">
+            <li class="nav-item">
+              <a href="#" class="nav-link active" id="nav-all">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+                <span>All Tasks</span>
+                <span class="nav-badge" id="badge-all">0</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" id="nav-pending">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span>Pending</span>
+                <span class="nav-badge" id="badge-pending">0</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" id="nav-completed">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <span>Completed</span>
+                <span class="nav-badge" id="badge-completed">0</span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </nav>
 
       <div class="sidebar-footer">
@@ -105,159 +132,310 @@
               <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg>
           </button>
-          <h2 class="page-title">Task Dashboard</h2>
+          <h2 class="page-title" id="page-title">Tasks</h2>
         </div>
 
         <div class="header-right">
+          <!-- 3-Way Theme Switcher (Light / Dark / System) -->
+          <div class="theme-switcher-group" role="group" aria-label="Theme Selection">
+            <button type="button" class="theme-toggle-option" data-theme="light" title="Light theme" aria-label="Light mode">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+            </button>
+            <button type="button" class="theme-toggle-option" data-theme="dark" title="Dark theme" aria-label="Dark mode">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+            </button>
+            <button type="button" class="theme-toggle-option" data-theme="system" title="System preference" aria-label="System mode">
+              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Dynamic Top Action Button -->
           <button type="button" class="btn-primary" id="open-add-modal-btn">
             <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
-            <span>New Task</span>
+            <span id="top-action-text">New Task</span>
           </button>
         </div>
       </header>
 
-      <!-- Page Content -->
+      <!-- Main Content Pages -->
       <main class="page-content">
-        <!-- Welcome Banner -->
-        <div class="welcome-banner">
-          <h1 class="welcome-title">Welcome back, <span id="welcome-name">there</span>!</h1>
-          <p class="welcome-subtitle">Here is a summary of your workspace and active assignments.</p>
+
+        <!-- ================================================================ -->
+        <!-- VIEW 1: TASKS DASHBOARD                                          -->
+        <!-- ================================================================ -->
+        <div class="app-view active" id="view-tasks">
+          <!-- Welcome Banner -->
+          <div class="welcome-banner">
+            <h1 class="welcome-title">Welcome back, <span id="welcome-name">there</span>!</h1>
+            <p class="welcome-subtitle">Here is a summary of your workspace, tasks, and productivity.</p>
+          </div>
+
+          <!-- 4 Stat Summary Cards -->
+          <section class="stats-grid" aria-label="Summary Statistics">
+            <div class="stat-card">
+              <div class="stat-icon total">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </div>
+              <div class="stat-info">
+                <div class="stat-label">Total Tasks</div>
+                <div class="stat-value" id="stat-total">0</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon pending">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+              <div class="stat-info">
+                <div class="stat-label">Pending</div>
+                <div class="stat-value" id="stat-pending">0</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon completed">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </div>
+              <div class="stat-info">
+                <div class="stat-label">Completed</div>
+                <div class="stat-value" id="stat-completed">0</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon rate">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+              </div>
+              <div class="stat-info">
+                <div class="stat-label">Completion Rate</div>
+                <div class="stat-value" id="stat-rate">0%</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Search, Filter & Sort Toolbar -->
+          <div class="toolbar">
+            <div class="toolbar-search">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input 
+                type="text" 
+                class="search-input" 
+                id="search-input" 
+                placeholder="Search tasks by title or details..."
+                aria-label="Search tasks"
+              >
+              <button type="button" class="search-clear-btn" id="search-clear" aria-label="Clear search">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <div class="toolbar-filters">
+              <button type="button" class="filter-btn active" data-filter="ALL">All</button>
+              <button type="button" class="filter-btn" data-filter="PENDING">Pending</button>
+              <button type="button" class="filter-btn" data-filter="COMPLETED">Completed</button>
+            </div>
+
+            <div class="toolbar-sort">
+              <select class="sort-select" id="sort-select" aria-label="Sort tasks">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="title">Title (A - Z)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Task List Area -->
+          <section aria-label="Task List">
+            <!-- Loading Skeleton -->
+            <div class="loading-skeleton" id="loading-skeleton">
+              <div class="skeleton-card"></div>
+              <div class="skeleton-card"></div>
+              <div class="skeleton-card"></div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="empty-state">
+              <div class="empty-icon-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="12" y1="18" x2="12" y2="12"></line>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+              </div>
+              <h3 class="empty-title">No tasks found</h3>
+              <p class="empty-subtitle">You have no tasks matching the selected filters. Add a new task to stay organized and productive.</p>
+              <button type="button" class="btn-primary" id="empty-add-btn">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Create your first task</span>
+              </button>
+            </div>
+
+            <!-- Tasks Cards Container -->
+            <div class="tasks-container" id="tasks-container"></div>
+          </section>
         </div>
 
-        <!-- 4 Stat Summary Cards -->
-        <section class="stats-grid" aria-label="Summary Statistics">
-          <div class="stat-card">
-            <div class="stat-icon total">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <rect x="3" y="3" width="7" height="7"></rect>
-                <rect x="14" y="3" width="7" height="7"></rect>
-                <rect x="14" y="14" width="7" height="7"></rect>
-                <rect x="3" y="14" width="7" height="7"></rect>
-              </svg>
-            </div>
-            <div class="stat-info">
-              <div class="stat-label">Total Tasks</div>
-              <div class="stat-value" id="stat-total">0</div>
+        <!-- ================================================================ -->
+        <!-- VIEW 2: FLEXIBLE PERSONAL TIMETABLE                              -->
+        <!-- ================================================================ -->
+        <div class="app-view" id="view-timetable" style="display: none;">
+          <!-- Day Selector Bar -->
+          <div class="timetable-top-bar">
+            <div class="day-selector-wrapper">
+              <button type="button" class="day-nav-arrow" id="tt-prev-day-btn" title="Previous day" aria-label="Previous day">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+
+              <div class="day-tabs-container" id="tt-day-tabs">
+                <button type="button" class="day-tab" data-day="MONDAY">
+                  <span class="day-tab-name">Monday</span>
+                  <span class="day-tab-date" data-day-date="MONDAY">--</span>
+                </button>
+                <button type="button" class="day-tab" data-day="TUESDAY">
+                  <span class="day-tab-name">Tuesday</span>
+                  <span class="day-tab-date" data-day-date="TUESDAY">--</span>
+                </button>
+                <button type="button" class="day-tab" data-day="WEDNESDAY">
+                  <span class="day-tab-name">Wednesday</span>
+                  <span class="day-tab-date" data-day-date="WEDNESDAY">--</span>
+                </button>
+                <button type="button" class="day-tab" data-day="THURSDAY">
+                  <span class="day-tab-name">Thursday</span>
+                  <span class="day-tab-date" data-day-date="THURSDAY">--</span>
+                </button>
+                <button type="button" class="day-tab" data-day="FRIDAY">
+                  <span class="day-tab-name">Friday</span>
+                  <span class="day-tab-date" data-day-date="FRIDAY">--</span>
+                </button>
+                <button type="button" class="day-tab" data-day="SATURDAY">
+                  <span class="day-tab-name">Saturday</span>
+                  <span class="day-tab-date" data-day-date="SATURDAY">--</span>
+                </button>
+                <button type="button" class="day-tab" data-day="SUNDAY">
+                  <span class="day-tab-name">Sunday</span>
+                  <span class="day-tab-date" data-day-date="SUNDAY">--</span>
+                </button>
+              </div>
+
+              <button type="button" class="day-nav-arrow" id="tt-next-day-btn" title="Next day" aria-label="Next day">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
             </div>
           </div>
 
-          <div class="stat-card">
-            <div class="stat-icon pending">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
+          <!-- Day Banner & Add Entry Action -->
+          <div class="timetable-day-header">
+            <div class="day-header-left">
+              <div class="day-header-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+              <div>
+                <h2 class="day-header-title" id="tt-day-title">Monday Schedule</h2>
+                <div class="day-header-subtitle" id="tt-day-subtitle">Today • Loading date...</div>
+              </div>
             </div>
-            <div class="stat-info">
-              <div class="stat-label">Pending</div>
-              <div class="stat-value" id="stat-pending">0</div>
-            </div>
-          </div>
 
-          <div class="stat-card">
-            <div class="stat-icon completed">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
-            </div>
-            <div class="stat-info">
-              <div class="stat-label">Completed</div>
-              <div class="stat-value" id="stat-completed">0</div>
-            </div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-icon rate">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <line x1="18" y1="20" x2="18" y2="10"></line>
-                <line x1="12" y1="20" x2="12" y2="4"></line>
-                <line x1="6" y1="20" x2="6" y2="14"></line>
-              </svg>
-            </div>
-            <div class="stat-info">
-              <div class="stat-label">Completion Rate</div>
-              <div class="stat-value" id="stat-rate">0%</div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Search, Filter & Sort Toolbar -->
-        <div class="toolbar">
-          <div class="toolbar-search">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input 
-              type="text" 
-              class="search-input" 
-              id="search-input" 
-              placeholder="Search tasks by title or details..."
-              aria-label="Search tasks"
-            >
-            <button type="button" class="search-clear-btn" id="search-clear" aria-label="Clear search">
-              <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-          </div>
-
-          <div class="toolbar-filters">
-            <button type="button" class="filter-btn active" data-filter="ALL">All</button>
-            <button type="button" class="filter-btn" data-filter="PENDING">Pending</button>
-            <button type="button" class="filter-btn" data-filter="COMPLETED">Completed</button>
-          </div>
-
-          <div class="toolbar-sort">
-            <select class="sort-select" id="sort-select" aria-label="Sort tasks">
-              <option value="newest">Newest First</option>
-              <option value="oldest">Oldest First</option>
-              <option value="title">Title (A - Z)</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Task List Area -->
-        <section aria-label="Task List">
-          <!-- Loading Skeleton -->
-          <div class="loading-skeleton" id="loading-skeleton">
-            <div class="skeleton-card"></div>
-            <div class="skeleton-card"></div>
-            <div class="skeleton-card"></div>
-          </div>
-
-          <!-- Empty State -->
-          <div class="empty-state" id="empty-state">
-            <div class="empty-icon-wrap">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="12" y1="18" x2="12" y2="12"></line>
-                <line x1="9" y1="15" x2="15" y2="15"></line>
-              </svg>
-            </div>
-            <h3 class="empty-title">No tasks found</h3>
-            <p class="empty-subtitle">You have no tasks matching the selected filters. Add a new task to stay organized and productive.</p>
-            <button type="button" class="btn-primary" id="empty-add-btn">
+            <button type="button" class="btn-primary" id="open-timetable-add-modal-btn">
               <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
-              <span>Create your first task</span>
+              <span>Add Entry</span>
             </button>
           </div>
 
-          <!-- Tasks Cards Container -->
-          <div class="tasks-container" id="tasks-container"></div>
-        </section>
+          <!-- Schedule Canvas -->
+          <div class="timetable-canvas">
+            <!-- Loading Skeleton -->
+            <div class="loading-skeleton" id="tt-loading-skeleton" style="display: none;">
+              <div class="skeleton-card"></div>
+              <div class="skeleton-card"></div>
+            </div>
+
+            <!-- Empty State for Day with 0 entries -->
+            <div class="empty-state" id="tt-empty-state" style="display: none;">
+              <div class="empty-icon-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </div>
+              <h3 class="empty-title" id="tt-empty-title">No activities scheduled</h3>
+              <p class="empty-subtitle">Your schedule is completely clear on this day. Click below to add an activity, lecture, or personal task.</p>
+              <button type="button" class="btn-primary" id="tt-empty-add-btn">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Add First Entry</span>
+              </button>
+            </div>
+
+            <!-- Scheduled Entries Container -->
+            <div class="timeline-schedule" id="tt-entries-container"></div>
+          </div>
+        </div>
+
       </main>
     </div>
   </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODALS                                                               -->
+  <!-- ==================================================================== -->
 
   <!-- Add / Edit Task Modal -->
   <div class="modal-overlay" id="task-modal" role="dialog" aria-modal="true" aria-labelledby="task-modal-title">
@@ -292,17 +470,51 @@
             <textarea 
               id="modal-task-desc" 
               class="form-input" 
-              rows="4" 
+              rows="3" 
               placeholder="Add key deliverables, deadlines, or relevant links..."
             ></textarea>
           </div>
 
-          <div class="form-group" id="modal-status-group" style="display: none;">
-            <label for="modal-task-status" class="form-label">Status</label>
-            <select id="modal-task-status" class="form-input">
-              <option value="PENDING">Pending</option>
-              <option value="COMPLETED">Completed</option>
-            </select>
+          <div class="form-row-2">
+            <!-- Optional Deadline -->
+            <div class="form-group">
+              <label for="modal-task-duedate" class="form-label">Due Date (Optional)</label>
+              <input type="date" id="modal-task-duedate" class="form-input">
+            </div>
+
+            <!-- Status (in edit mode) -->
+            <div class="form-group" id="modal-status-group" style="display: none;">
+              <label for="modal-task-status" class="form-label">Status</label>
+              <select id="modal-task-status" class="form-input">
+                <option value="PENDING">Pending</option>
+                <option value="COMPLETED">Completed</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Weekly Recurring Option -->
+          <div class="form-group" style="margin-top: var(--space-2); padding: var(--space-3); background: var(--bg-app); border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+            <label style="display: flex; align-items: center; gap: var(--space-3); cursor: pointer;">
+              <input type="checkbox" id="modal-task-recurring" style="width: 18px; height: 18px; accent-color: var(--primary-600);">
+              <div>
+                <span style="font-size: var(--font-sm); font-weight: var(--font-weight-medium); color: var(--text-main); display: block;">Repeat Weekly</span>
+                <span style="font-size: var(--font-xs); color: var(--text-muted);">Schedules this task to recur every week</span>
+              </div>
+            </label>
+
+            <div id="modal-recurrence-day-group" style="display: none; margin-top: var(--space-3); padding-top: var(--space-2); border-top: 1px dashed var(--border-subtle);">
+              <label for="modal-task-recurrence-day" class="form-label" style="font-size: var(--font-xs);">Recurring Day</label>
+              <select id="modal-task-recurrence-day" class="form-input" style="font-size: var(--font-xs);">
+                <option value="">Same as due date or general</option>
+                <option value="MONDAY">Monday</option>
+                <option value="TUESDAY">Tuesday</option>
+                <option value="WEDNESDAY">Wednesday</option>
+                <option value="THURSDAY">Thursday</option>
+                <option value="FRIDAY">Friday</option>
+                <option value="SATURDAY">Saturday</option>
+                <option value="SUNDAY">Sunday</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -337,6 +549,125 @@
       <div class="modal-footer" style="justify-content: center; gap: var(--space-3); padding-bottom: var(--space-6);">
         <button type="button" class="btn-secondary" id="delete-modal-cancel">Keep Task</button>
         <button type="button" class="btn-danger" id="confirm-delete-btn">Delete Task</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add / Edit Timetable Entry Modal -->
+  <div class="modal-overlay" id="timetable-modal" role="dialog" aria-modal="true" aria-labelledby="timetable-modal-title">
+    <div class="modal-card" style="max-width: 520px;">
+      <div class="modal-header">
+        <h2 class="modal-title" id="timetable-modal-title">Add Timetable Entry</h2>
+        <button type="button" class="modal-close-btn" id="timetable-modal-close" aria-label="Close dialog">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <form id="timetable-form" novalidate>
+        <div class="modal-body">
+          <!-- Overlap Conflict Warning Banner -->
+          <div id="timetable-conflict-warning" class="timetable-conflict-banner" style="display: none;" role="alert">
+            <div style="display: flex; gap: var(--space-3);">
+              <svg class="icon" style="color: var(--status-pending-text); flex-shrink: 0; width: 20px; height: 20px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              <div style="flex: 1;">
+                <strong style="color: var(--status-pending-text); font-size: var(--font-sm);">Schedule Overlap Detected:</strong>
+                <p id="conflict-warning-text" style="font-size: var(--font-xs); color: var(--text-secondary); margin-top: 2px;">
+                  This entry conflicts with another scheduled activity.
+                </p>
+                <p style="font-size: var(--font-xs); color: var(--text-muted); margin-top: 4px;">
+                  You can adjust the time slots, or click <em>Save Anyway</em> to schedule it.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="modal-tt-title" class="form-label">Activity Title *</label>
+            <input 
+              type="text" 
+              id="modal-tt-title" 
+              class="form-input" 
+              placeholder="e.g. Mathematics Lecture, Team Standup, Personal Work..." 
+              maxlength="200" 
+              required
+            >
+            <span id="modal-tt-title-error" class="form-error-msg"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="modal-tt-day" class="form-label">Day of Week *</label>
+            <select id="modal-tt-day" class="form-input" required>
+              <option value="MONDAY">Monday</option>
+              <option value="TUESDAY">Tuesday</option>
+              <option value="WEDNESDAY">Wednesday</option>
+              <option value="THURSDAY">Thursday</option>
+              <option value="FRIDAY">Friday</option>
+              <option value="SATURDAY">Saturday</option>
+              <option value="SUNDAY">Sunday</option>
+            </select>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="modal-tt-start" class="form-label">Start Time *</label>
+              <input type="time" id="modal-tt-start" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label for="modal-tt-end" class="form-label">End Time *</label>
+              <input type="time" id="modal-tt-end" class="form-input" required>
+            </div>
+          </div>
+          <span id="modal-tt-time-error" class="form-error-msg"></span>
+
+          <div class="form-group">
+            <label for="modal-tt-desc" class="form-label">Description (Optional)</label>
+            <textarea 
+              id="modal-tt-desc" 
+              class="form-input" 
+              rows="3" 
+              placeholder="Free-text notes: room number, professor, deliverables, agenda, or anything you need..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="timetable-modal-cancel">Cancel</button>
+          <button type="submit" class="btn-primary" id="timetable-modal-submit">
+            <span class="spinner" aria-hidden="true"></span>
+            <span class="btn-text">Save Entry</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Timetable Entry Confirmation Modal -->
+  <div class="modal-overlay" id="delete-timetable-modal" role="dialog" aria-modal="true" aria-labelledby="delete-tt-title">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-body" style="text-align: center; padding-top: var(--space-8);">
+        <div class="delete-icon-box" style="margin: 0 auto var(--space-4);">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <h2 class="modal-title" id="delete-tt-title" style="margin-bottom: var(--space-2);">Delete Entry</h2>
+        <p style="font-size: var(--font-sm); color: var(--text-muted); line-height: 1.5;">
+          Are you sure you want to remove this timetable entry?
+        </p>
+      </div>
+
+      <div class="modal-footer" style="justify-content: center; gap: var(--space-3); padding-bottom: var(--space-6);">
+        <button type="button" class="btn-secondary" id="delete-tt-cancel">Keep Entry</button>
+        <button type="button" class="btn-danger" id="confirm-delete-tt-btn">Delete Entry</button>
       </div>
     </div>
   </div>

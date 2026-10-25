@@ -3,11 +3,37 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
   setupPasswordToggles();
   setupLoginForm();
   setupRegisterForm();
   checkUrlParams();
 });
+
+// Initialize Theme from localStorage or system preference
+function initTheme() {
+  const savedTheme = localStorage.getItem('taskflow-theme') || 'system';
+  applyTheme(savedTheme);
+
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  if (mediaQuery.addEventListener) {
+    mediaQuery.addEventListener('change', () => {
+      const currentPref = localStorage.getItem('taskflow-theme') || 'system';
+      if (currentPref === 'system') {
+        applyTheme('system');
+      }
+    });
+  }
+}
+
+function applyTheme(theme) {
+  if (theme === 'system') {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  } else {
+    document.documentElement.setAttribute('data-theme', theme);
+  }
+}
 
 // Setup Show/Hide Password buttons
 function setupPasswordToggles() {
