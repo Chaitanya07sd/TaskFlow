@@ -18,7 +18,7 @@ pipeline {
     }
 
     options {
-        timeout(time: 30, unit: 'MINUTES')
+        timeout(time: 60, unit: 'MINUTES')
         buildDiscarder(logRotator(
             numToKeepStr: '15',
             artifactNumToKeepStr: '5'
@@ -155,12 +155,13 @@ pipeline {
                         -f backend/Dockerfile ^
                         -t "%DOCKER_IMAGE%:%DOCKER_TAG%" ^
                         -t "%DOCKER_IMAGE%:latest" .
-                    
+
                     if errorlevel 1 exit /b 1
                 '''
             }
         }
-                 // ---------------------------------------------------------
+
+        // ---------------------------------------------------------
         // Stage 7: Verify Trivy Installation
         // ---------------------------------------------------------
         stage('Verify Trivy') {
@@ -169,11 +170,13 @@ pipeline {
 
                 bat '''
                     "C:\\Users\\HP\\AppData\\Local\\Microsoft\\WinGet\\Packages\\AquaSecurity.Trivy_Microsoft.Winget.Source_8wekyb3d8bbwe\\trivy.exe" --version
+
                     if errorlevel 1 exit /b 1
                 '''
             }
         }
-                // ---------------------------------------------------------
+
+        // ---------------------------------------------------------
         // Stage 8: Docker Image Security Scan
         // ---------------------------------------------------------
         stage('Trivy Security Scan') {
@@ -181,7 +184,7 @@ pipeline {
                 echo 'Stage 8: Scanning Docker image for vulnerabilities...'
 
                 bat '''
-                    "C:\\Users\\HP\\AppData\\Local\\Microsoft\\WinGet\\Packages\\AquaSecurity.Trivy_Microsoft.Winget.Source_8wekyb3d8bbwe\\trivy.exe" image --scanners vuln --severity HIGH,CRITICAL "%DOCKER_IMAGE%:%DOCKER_TAG%"
+                    "C:\\Users\\HP\\AppData\\Local\\Microsoft\\WinGet\\Packages\\AquaSecurity.Trivy_Microsoft.Winget.Source_8wekyb3d8bbwe\\trivy.exe" image --timeout 30m --scanners vuln --severity HIGH,CRITICAL "%DOCKER_IMAGE%:%DOCKER_TAG%"
 
                     if errorlevel 1 exit /b 1
                 '''
