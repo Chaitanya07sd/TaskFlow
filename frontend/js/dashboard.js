@@ -180,12 +180,17 @@ const App = (() => {
 
     // Watch system changes dynamically
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleMediaChange = () => {
+      if (state.theme === 'system') {
+        const prefersDark = mediaQuery.matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      }
+    };
+
     if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', () => {
-        if (state.theme === 'system') {
-          applyTheme('system');
-        }
-      });
+      mediaQuery.addEventListener('change', handleMediaChange);
+    } else if (mediaQuery.addListener) {
+      mediaQuery.addListener(handleMediaChange);
     }
 
     updateThemeSwitcherUI();
@@ -828,7 +833,7 @@ const App = (() => {
 
     state.timetableEntries.forEach(entry => {
       const card = document.createElement('div');
-      card.className = 'timeline-entry-card';
+      card.className = 'timetable-entry-card timeline-entry-card';
       card.dataset.id = entry.id;
 
       const formattedStart = format12Hour(entry.startTime);
@@ -907,7 +912,7 @@ const App = (() => {
 
     if (dom.timetableModalTitle) dom.timetableModalTitle.textContent = 'Edit Timetable Entry';
     if (dom.modalTtTitle) dom.modalTtTitle.value = entry.title;
-    if (dom.modalTtDay) dom.modalTtDay.value = entry.dayOfWeek;
+    if (dom.modalTtDay) dom.modalTtDay.value = entry.day;
     if (dom.modalTtStart) dom.modalTtStart.value = entry.startTime;
     if (dom.modalTtEnd) dom.modalTtEnd.value = entry.endTime;
     if (dom.modalTtDesc) dom.modalTtDesc.value = entry.description || '';
@@ -1028,7 +1033,7 @@ const App = (() => {
 
     const payload = {
       title,
-      dayOfWeek: day,
+      day: day,
       startTime,
       endTime,
       description: description || null
@@ -1102,10 +1107,27 @@ const App = (() => {
   // EVENT LISTENERS SETUP
   // ==========================================================================
   function setupEventListeners() {
-    // Theme Switcher buttons
-    dom.themeButtons.forEach(btn => {
+    // Theme Switcher buttons & keyboard navigation
+    const themeButtonsList = Array.from(dom.themeButtons || []);
+    themeButtonsList.forEach((btn, index) => {
       btn.addEventListener('click', () => {
         applyTheme(btn.dataset.theme);
+      });
+
+      // Keyboard arrow navigation support
+      btn.addEventListener('keydown', (e) => {
+        let targetBtn = null;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          targetBtn = themeButtonsList[(index + 1) % themeButtonsList.length];
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          targetBtn = themeButtonsList[(index - 1 + themeButtonsList.length) % themeButtonsList.length];
+        }
+        if (targetBtn) {
+          targetBtn.focus();
+          applyTheme(targetBtn.dataset.theme);
+        }
       });
     });
 

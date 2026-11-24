@@ -50,3 +50,6 @@ $RECYCLE.BIN/
 .DS_Store
 .Spotlight-V100
 .Trashes
+
+cookies.txt
+buddy_demo.c

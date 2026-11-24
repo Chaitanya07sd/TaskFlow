@@ -107,9 +107,158 @@
   --sidebar-width: 260px;
   --header-height: 70px;
   --max-content-width: 1200px;
+
+  /* Composite & Component Tokens */
+  --skeleton-gradient: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  --modal-backdrop: rgba(15, 23, 42, 0.45);
+  --auth-gradient: radial-gradient(circle at 50% 0%, #eef2ff 0%, var(--bg-app) 75%);
+
+  color-scheme: light;
 }
 
-/* Base Reset & Globals */
+/* ==========================================================================
+   Dark Theme Design Tokens
+   Applied via [data-theme="dark"] attribute on <html> element
+   ========================================================================== */
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Color Palette - Neutrals (Refined Slate / Obsidian) */
+  --bg-app: #0b0f19;
+  --bg-surface: #131b2e;
+  --bg-surface-hover: #1e293b;
+  --bg-subtle: #0f1626;
+
+  --text-main: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-light: #64748b;
+  --text-inverse: #ffffff;
+
+  --border-subtle: #1e293b;
+  --border-medium: #334155;
+  --border-focus: #818cf8;
+
+  /* Primary Accent - Adjusted for high contrast in dark mode */
+  --primary-50: #1e1b4b;
+  --primary-100: #2e2a72;
+  --primary-200: #3730a3;
+  --primary-500: #6366f1;
+  --primary-600: #6366f1;
+  --primary-700: #818cf8;
+  --primary-800: #a5b4fc;
+  --primary-focus: rgba(99, 102, 241, 0.35);
+
+  /* Status Colors */
+  --status-pending-bg: rgba(245, 158, 11, 0.15);
+  --status-pending-text: #fbbf24;
+  --status-pending-border: rgba(245, 158, 11, 0.35);
+  --status-pending-dot: #f59e0b;
+
+  --status-completed-bg: rgba(16, 185, 129, 0.15);
+  --status-completed-text: #34d399;
+  --status-completed-border: rgba(16, 185, 129, 0.35);
+  --status-completed-dot: #10b981;
+
+  /* Semantic Feedback */
+  --color-danger: #ef4444;
+  --color-danger-bg: rgba(239, 68, 68, 0.15);
+  --color-danger-border: rgba(239, 68, 68, 0.35);
+  --color-danger-text: #fca5a5;
+
+  --color-success: #10b981;
+  --color-success-bg: rgba(16, 185, 129, 0.15);
+  --color-success-border: rgba(16, 185, 129, 0.35);
+  --color-success-text: #6ee7b7;
+
+  --color-info: #60a5fa;
+  --color-info-bg: rgba(59, 130, 246, 0.15);
+  --color-info-border: rgba(59, 130, 246, 0.35);
+  --color-info-text: #93c5fd;
+
+  /* Shadows - deeper contrast for dark mode */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.35);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.45), 0 1px 2px -1px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.45), 0 2px 4px -2px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.55), 0 4px 6px -4px rgba(0, 0, 0, 0.35);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.65), 0 8px 10px -6px rgba(0, 0, 0, 0.45);
+
+  /* Composite & Component Tokens */
+  --skeleton-gradient: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+  --modal-backdrop: rgba(0, 0, 0, 0.7);
+  --auth-gradient: radial-gradient(circle at 50% 0%, #1e1b4b 0%, var(--bg-app) 75%);
+}
+
+/* Fallback automatic system preference when not explicitly set to light */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg-app: #0b0f19;
+    --bg-surface: #131b2e;
+    --bg-surface-hover: #1e293b;
+    --bg-subtle: #0f1626;
+
+    --text-main: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --text-light: #64748b;
+    --text-inverse: #ffffff;
+
+    --border-subtle: #1e293b;
+    --border-medium: #334155;
+    --border-focus: #818cf8;
+
+    --primary-50: #1e1b4b;
+    --primary-100: #2e2a72;
+    --primary-200: #3730a3;
+    --primary-500: #6366f1;
+    --primary-600: #6366f1;
+    --primary-700: #818cf8;
+    --primary-800: #a5b4fc;
+    --primary-focus: rgba(99, 102, 241, 0.35);
+
+    --status-pending-bg: rgba(245, 158, 11, 0.15);
+    --status-pending-text: #fbbf24;
+    --status-pending-border: rgba(245, 158, 11, 0.35);
+    --status-pending-dot: #f59e0b;
+
+    --status-completed-bg: rgba(16, 185, 129, 0.15);
+    --status-completed-text: #34d399;
+    --status-completed-border: rgba(16, 185, 129, 0.35);
+    --status-completed-dot: #10b981;
+
+    --color-danger: #ef4444;
+    --color-danger-bg: rgba(239, 68, 68, 0.15);
+    --color-danger-border: rgba(239, 68, 68, 0.35);
+    --color-danger-text: #fca5a5;
+
+    --color-success: #10b981;
+    --color-success-bg: rgba(16, 185, 129, 0.15);
+    --color-success-border: rgba(16, 185, 129, 0.35);
+    --color-success-text: #6ee7b7;
+
+    --color-info: #60a5fa;
+    --color-info-bg: rgba(59, 130, 246, 0.15);
+    --color-info-border: rgba(59, 130, 246, 0.35);
+    --color-info-text: #93c5fd;
+
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.35);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.45), 0 1px 2px -1px rgba(0, 0, 0, 0.45);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.45), 0 2px 4px -2px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.55), 0 4px 6px -4px rgba(0, 0, 0, 0.35);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.65), 0 8px 10px -6px rgba(0, 0, 0, 0.45);
+
+    --skeleton-gradient: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+    --modal-backdrop: rgba(0, 0, 0, 0.7);
+    --auth-gradient: radial-gradient(circle at 50% 0%, #1e1b4b 0%, var(--bg-app) 75%);
+  }
+}
+
+/* ==========================================================================
+   Base Reset & Globals
+   ========================================================================== */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -128,17 +277,34 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
 /* Accessibility Focus Ring */
 :focus-visible {
-  outline: 2px solid var(--primary-600);
+  outline: 2px solid var(--border-focus);
   outline-offset: 2px;
 }
 
 button, input, textarea, select {
   font: inherit;
   color: inherit;
+}
+
+input, textarea, select {
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  border: 1px solid var(--border-medium);
+}
+
+::placeholder {
+  color: var(--text-light);
+  opacity: 1;
+}
+
+select option {
+  background-color: var(--bg-surface);
+  color: var(--text-main);
 }
 
 a {
@@ -161,4 +327,71 @@ a:hover {
   height: 1.25rem;
   stroke-width: 2;
   flex-shrink: 0;
+}
+
+/* Scrollbar styling for consistent look in dark mode */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-app);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-light);
+}
+
+/* ==========================================================================
+   Theme Switcher Component (Used across Dashboard & Auth views)
+   ========================================================================== */
+.theme-switcher-group {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 3px;
+  gap: 3px;
+  box-shadow: var(--shadow-xs);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.theme-toggle-option {
+  background: transparent;
+  border: none;
+  padding: 0.35rem 0.55rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.theme-toggle-option:hover {
+  color: var(--text-main);
+  background-color: var(--bg-surface-hover);
+}
+
+.theme-toggle-option.active {
+  color: var(--primary-700);
+  background-color: var(--primary-100);
+}
+
+[data-theme="dark"] .theme-toggle-option.active {
+  color: #ffffff;
+  background-color: var(--primary-600);
+}
+
+.theme-toggle-option svg {
+  width: 16px;
+  height: 16px;
 }

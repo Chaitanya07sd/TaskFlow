@@ -16,23 +16,72 @@ function initTheme() {
   applyTheme(savedTheme);
 
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  const handleMediaChange = () => {
+    const currentPref = localStorage.getItem('taskflow-theme') || 'system';
+    if (currentPref === 'system') {
+      applyTheme('system');
+    }
+  };
+
   if (mediaQuery.addEventListener) {
-    mediaQuery.addEventListener('change', () => {
-      const currentPref = localStorage.getItem('taskflow-theme') || 'system';
-      if (currentPref === 'system') {
-        applyTheme('system');
-      }
-    });
+    mediaQuery.addEventListener('change', handleMediaChange);
+  } else if (mediaQuery.addListener) {
+    mediaQuery.addListener(handleMediaChange);
   }
+
+  setupThemeSwitcher();
 }
 
 function applyTheme(theme) {
+  localStorage.setItem('taskflow-theme', theme);
   if (theme === 'system') {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
   } else {
     document.documentElement.setAttribute('data-theme', theme);
   }
+  updateThemeSwitcherUI(theme);
+}
+
+function updateThemeSwitcherUI(activeTheme) {
+  const currentTheme = activeTheme || localStorage.getItem('taskflow-theme') || 'system';
+  const buttons = document.querySelectorAll('.theme-toggle-option');
+  buttons.forEach(btn => {
+    const btnTheme = btn.dataset.theme;
+    if (btnTheme === currentTheme) {
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+    } else {
+      btn.classList.remove('active');
+      btn.setAttribute('aria-pressed', 'false');
+    }
+  });
+}
+
+function setupThemeSwitcher() {
+  const buttons = Array.from(document.querySelectorAll('.theme-toggle-option'));
+  buttons.forEach((btn, index) => {
+    btn.addEventListener('click', () => {
+      applyTheme(btn.dataset.theme);
+    });
+
+    // Support keyboard arrow navigation between options
+    btn.addEventListener('keydown', (e) => {
+      let targetBtn = null;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        targetBtn = buttons[(index + 1) % buttons.length];
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        targetBtn = buttons[(index - 1 + buttons.length) % buttons.length];
+      }
+      if (targetBtn) {
+        targetBtn.focus();
+        applyTheme(targetBtn.dataset.theme);
+      }
+    });
+  });
+  updateThemeSwitcherUI();
 }
 
 // Setup Show/Hide Password buttons

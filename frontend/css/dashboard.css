@@ -429,8 +429,8 @@
 }
 
 .stat-icon.rate {
-  background-color: #eff6ff;
-  color: #2563eb;
+  background-color: var(--color-info-bg);
+  color: var(--color-info);
 }
 
 .stat-info {
@@ -598,7 +598,7 @@
 }
 
 .task-card.completed {
-  background-color: #fafbfc;
+  background-color: var(--bg-subtle);
 }
 
 .task-checkbox-container {
@@ -833,7 +833,7 @@
 
 .skeleton-card {
   height: 90px;
-  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background: var(--skeleton-gradient);
   background-size: 200% 100%;
   animation: skeletonPulse 1.5s infinite;
   border-radius: var(--radius-lg);
@@ -844,11 +844,58 @@
   100% { background-position: -200% 0; }
 }
 
+
+/* Form inputs & controls (Modals & Shared) */
+.form-group {
+  margin-bottom: var(--space-4);
+}
+
+.form-label {
+  display: block;
+  font-size: var(--font-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.65rem 0.875rem;
+  font-size: var(--font-sm);
+  color: var(--text-main);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--primary-focus);
+}
+
+.form-input.is-invalid {
+  border-color: var(--color-danger);
+}
+
+.form-input.is-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.form-error-msg {
+  display: block;
+  font-size: var(--font-xs);
+  color: var(--color-danger-text);
+  margin-top: var(--space-1);
+  min-height: 1rem;
+}
+
 /* Modals */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(15, 23, 42, 0.45);
+  background-color: var(--modal-backdrop);
   backdrop-filter: blur(4px);
   z-index: 50;
   display: none;
@@ -1054,7 +1101,7 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.5);
+    background: var(--modal-backdrop);
     z-index: 25;
   }
 
@@ -1390,7 +1437,8 @@
   gap: var(--space-4);
 }
 
-.timetable-entry-card {
+.timetable-entry-card,
+.timeline-entry-card {
   background: var(--bg-app);
   border: 1px solid var(--border-subtle);
   border-left: 5px solid var(--primary-600);
@@ -1403,7 +1451,8 @@
   transition: all var(--transition-fast);
 }
 
-.timetable-entry-card:hover {
+.timetable-entry-card:hover,
+.timeline-entry-card:hover {
   background: var(--bg-surface);
   border-color: var(--border-medium);
   border-left-color: var(--primary-700);

@@ -9,7 +9,22 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-6) var(--space-4);
-  background: radial-gradient(circle at 50% 0%, #eef2ff 0%, var(--bg-app) 75%);
+  background: var(--auth-gradient);
+  position: relative;
+}
+
+.auth-theme-switcher {
+  position: absolute;
+  top: var(--space-5);
+  right: var(--space-6);
+  z-index: 10;
+}
+
+@media (max-width: 480px) {
+  .auth-theme-switcher {
+    top: var(--space-3);
+    right: var(--space-3);
+  }
 }
 
 .auth-brand {
