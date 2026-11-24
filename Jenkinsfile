@@ -173,6 +173,20 @@ pipeline {
                 '''
             }
         }
+                // ---------------------------------------------------------
+        // Stage 8: Docker Image Security Scan
+        // ---------------------------------------------------------
+        stage('Trivy Security Scan') {
+            steps {
+                echo 'Stage 8: Scanning Docker image for vulnerabilities...'
+
+                bat '''
+                    "C:\\Users\\HP\\AppData\\Local\\Microsoft\\WinGet\\Packages\\AquaSecurity.Trivy_Microsoft.Winget.Source_8wekyb3d8bbwe\\trivy.exe" image --scanners vuln --severity HIGH,CRITICAL "%DOCKER_IMAGE%:%DOCKER_TAG%"
+
+                    if errorlevel 1 exit /b 1
+                '''
+            }
+        }
 
         // ---------------------------------------------------------
         // Deployment is intentionally not enabled yet.
