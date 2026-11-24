@@ -160,6 +160,19 @@ pipeline {
                 '''
             }
         }
+                 // ---------------------------------------------------------
+        // Stage 7: Verify Trivy Installation
+        // ---------------------------------------------------------
+        stage('Verify Trivy') {
+            steps {
+                echo 'Stage 7: Checking Trivy security scanner...'
+
+                bat '''
+                    "C:\\Users\\HP\\AppData\\Local\\Microsoft\\WinGet\\Packages\\AquaSecurity.Trivy_Microsoft.Winget.Source_8wekyb3d8bbwe\\trivy.exe" --version
+                    if errorlevel 1 exit /b 1
+                '''
+            }
+        }
 
         // ---------------------------------------------------------
         // Deployment is intentionally not enabled yet.
