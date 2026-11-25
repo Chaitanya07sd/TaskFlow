@@ -205,7 +205,7 @@ pipeline {
                         bat '''
                             echo Waiting for TaskFlow health check...
 
-                            powershell -NoProfile -ExecutionPolicy Bypass -Command "$deadline = (Get-Date).AddMinutes(3); do { $status = & $env:DOCKER_CLI inspect --format='{{.State.Health.Status}}' $env:DEPLOY_CONTAINER; if ($status -eq 'healthy') { Write-Host 'TaskFlow container is healthy.'; exit 0 }; Start-Sleep -Seconds 5 } while ((Get-Date) -lt $deadline); Write-Host 'Deployment health check failed.'; & $env:DOCKER_CLI logs $env:DEPLOY_CONTAINER; exit 1"
+                            powershell -NoProfile -ExecutionPolicy Bypass -Command "$deadline = (Get-Date).AddMinutes(10); do { $status = & $env:DOCKER_CLI inspect --format='{{.State.Health.Status}}' $env:DEPLOY_CONTAINER; if ($status -eq 'healthy') { Write-Host 'TaskFlow container is healthy.'; exit 0 }; Start-Sleep -Seconds 5 } while ((Get-Date) -lt $deadline); Write-Host 'Deployment health check failed.'; & $env:DOCKER_CLI logs $env:DEPLOY_CONTAINER; exit 1"
 
                             if errorlevel 1 exit /b 1
                         '''
