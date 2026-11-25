@@ -55,3 +55,8 @@ cookies.txt
 buddy_demo.c
 
 kFlow project setup*
+
+# Local security assessment and database backups
+backend/dependency-tree.txt
+backend/pom-backup-before-security.xml
+task_manager_db_backup.sql
