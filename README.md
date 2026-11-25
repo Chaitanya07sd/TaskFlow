@@ -342,3 +342,5 @@ All task endpoints require an active session cookie (`TASKFLOW_SESSIONID`). Stat
 ## License
 
 MIT License. Designed and engineered for academic demonstration and professional portfolios.
+
+## CI/CD Automation Test
