@@ -42,11 +42,12 @@ public class WebSecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
+       DaoAuthenticationProvider authProvider =
+            new DaoAuthenticationProvider(userDetailsService);
+
+    authProvider.setPasswordEncoder(passwordEncoder());
+    return authProvider;
+}
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {

@@ -60,7 +60,6 @@ ENV SERVER_PORT=8080 \
     DB_PORT=3306 \
     DB_NAME=task_manager_db \
     DB_USERNAME=root \
-    DB_PASSWORD="" \
     COOKIE_SECURE=false \
     JAVA_OPTS="-Xms256m -Xmx512m -XX:+UseG1GC"
 
