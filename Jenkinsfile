@@ -11,9 +11,9 @@ pipeline {
         APP_NAME = 'taskflow-backend'
         DOCKER_IMAGE = 'taskflow-app'
         DOCKER_TAG = "${BUILD_NUMBER}"
-        DEPLOY_PORT = '8080'
+        DEPLOY_PORT = '8082'
+        DEPLOY_CONTAINER = 'taskflow-app-deploy'
 
-        // Docker executable installed on this Windows machine
         DOCKER_CLI = 'C:\\Users\\HP\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe'
     }
 
@@ -28,9 +28,7 @@ pipeline {
 
     stages {
 
-        // ---------------------------------------------------------
         // Stage 1: Checkout
-        // ---------------------------------------------------------
         stage('Checkout') {
             steps {
                 echo 'Stage 1: Checking out source repository...'
@@ -38,31 +36,22 @@ pipeline {
             }
         }
 
-        // ---------------------------------------------------------
         // Stage 2: Validate Environment
-        // ---------------------------------------------------------
         stage('Validate Environment') {
             steps {
                 echo 'Stage 2: Validating Java, Maven, Git and Docker...'
 
                 bat '''
-                    echo Checking Java...
                     java -version
                     if errorlevel 1 exit /b 1
 
-                    echo Checking Maven...
                     mvn -version
                     if errorlevel 1 exit /b 1
 
-                    echo Checking Git...
                     git --version
                     if errorlevel 1 exit /b 1
 
-                    echo Checking Docker executable...
-                    if not exist "%DOCKER_CLI%" (
-                        echo Docker executable not found.
-                        exit /b 1
-                    )
+                    if not exist "%DOCKER_CLI%" exit /b 1
 
                     "%DOCKER_CLI%" version
                     if errorlevel 1 exit /b 1
@@ -72,9 +61,7 @@ pipeline {
             }
         }
 
-        // ---------------------------------------------------------
-        // Stage 3: Compile and Test Backend
-        // ---------------------------------------------------------
+        // Stage 3: Compile and Test
         stage('Compile & Test') {
             steps {
                 echo 'Stage 3: Compiling and running backend tests...'
@@ -94,9 +81,7 @@ pipeline {
             }
         }
 
-        // ---------------------------------------------------------
-        // Stage 4: Package Spring Boot JAR
-        // ---------------------------------------------------------
+        // Stage 4: Package JAR
         stage('Package JAR') {
             steps {
                 echo 'Stage 4: Packaging Spring Boot application...'
@@ -116,16 +101,12 @@ pipeline {
             }
         }
 
-        // ---------------------------------------------------------
         // Stage 5: Frontend Verification
-        // ---------------------------------------------------------
         stage('Frontend Verification') {
             steps {
                 echo 'Stage 5: Verifying frontend files...'
 
                 bat '''
-                    echo Checking frontend file structure...
-
                     if not exist frontend\\index.html exit /b 1
                     if not exist frontend\\login.html exit /b 1
                     if not exist frontend\\register.html exit /b 1
@@ -143,9 +124,7 @@ pipeline {
             }
         }
 
-        // ---------------------------------------------------------
         // Stage 6: Build Docker Image
-        // ---------------------------------------------------------
         stage('Build Docker Image') {
             steps {
                 echo 'Stage 6: Building production Docker image...'
@@ -161,9 +140,7 @@ pipeline {
             }
         }
 
-        // ---------------------------------------------------------
-        // Stage 7: Verify Trivy Installation
-        // ---------------------------------------------------------
+        // Stage 7: Verify Trivy
         stage('Verify Trivy') {
             steps {
                 echo 'Stage 7: Checking Trivy security scanner...'
@@ -176,9 +153,7 @@ pipeline {
             }
         }
 
-        // ---------------------------------------------------------
-        // Stage 8: Docker Image Security Scan
-        // ---------------------------------------------------------
+        // Stage 8: Trivy Security Scan
         stage('Trivy Security Scan') {
             steps {
                 echo 'Stage 8: Scanning Docker image for vulnerabilities...'
@@ -191,16 +166,60 @@ pipeline {
             }
         }
 
-        // ---------------------------------------------------------
-        // Deployment is intentionally not enabled yet.
-        // Database credentials and health endpoint must be verified.
-        // ---------------------------------------------------------
+        // Stage 9: Deploy to Docker
+        stage('Deploy to Docker') {
+            steps {
+                echo 'Stage 9: Deploying TaskFlow application...'
+
+                script {
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'taskflow-mysql',
+                            usernameVariable: 'DB_USERNAME',
+                            passwordVariable: 'DB_PASSWORD'
+                        )
+                    ]) {
+
+                        bat '''
+                            echo Removing previous deployment container if present...
+
+                            "%DOCKER_CLI%" rm -f "%DEPLOY_CONTAINER%" 2>nul
+
+                            echo Starting new TaskFlow deployment...
+
+                            "%DOCKER_CLI%" run -d ^
+                                --name "%DEPLOY_CONTAINER%" ^
+                                --restart unless-stopped ^
+                                -p "%DEPLOY_PORT%:8080" ^
+                                -e DB_HOST=host.docker.internal ^
+                                -e DB_PORT=3306 ^
+                                -e DB_NAME=task_manager_db_boot4_test ^
+                                -e DB_USERNAME ^
+                                -e DB_PASSWORD ^
+                                -e COOKIE_SECURE=false ^
+                                "%DOCKER_IMAGE%:%DOCKER_TAG%"
+
+                            if errorlevel 1 exit /b 1
+                        '''
+
+                        bat '''
+                            echo Waiting for TaskFlow health check...
+
+                            powershell -NoProfile -ExecutionPolicy Bypass -Command "$deadline = (Get-Date).AddMinutes(3); do { $status = & $env:DOCKER_CLI inspect --format='{{.State.Health.Status}}' $env:DEPLOY_CONTAINER; if ($status -eq 'healthy') { Write-Host 'TaskFlow container is healthy.'; exit 0 }; Start-Sleep -Seconds 5 } while ((Get-Date) -lt $deadline); Write-Host 'Deployment health check failed.'; & $env:DOCKER_CLI logs $env:DEPLOY_CONTAINER; exit 1"
+
+                            if errorlevel 1 exit /b 1
+                        '''
+                    }
+                }
+            }
+        }
     }
 
     post {
         success {
-            echo "SUCCESS: TaskFlow CI pipeline completed for build #${BUILD_NUMBER}."
-            echo 'Backend tests, packaging, frontend verification and Docker build completed.'
+            echo "SUCCESS: TaskFlow CI/CD pipeline completed for build #${BUILD_NUMBER}."
+            echo 'All CI stages passed and Docker deployment completed.'
+            echo 'Application URL: http://localhost:8082'
         }
 
         failure {
